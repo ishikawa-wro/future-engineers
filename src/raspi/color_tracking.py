@@ -9,11 +9,11 @@ def red_detect(img):
 
     # 赤色のHSVの値域1
     hsv_min = np.array([0,127,0])
-    hsv_max = np.array([15,255,255])
+    hsv_max = np.array([30,255,255])
     mask1 = cv2.inRange(hsv, hsv_min, hsv_max)
 
     # 赤色のHSVの値域2
-    hsv_min = np.array([165,127,127])
+    hsv_min = np.array([150,127,127])
     hsv_max = np.array([180,255,255])
     mask2 = cv2.inRange(hsv, hsv_min, hsv_max)
 
@@ -32,7 +32,7 @@ def green_detect(img):
 
     # 緑色のHSVの値域
     hsv_min = np.array([30,64,0])
-    hsv_max = np.array([45,255,255])
+    hsv_max = np.array([90,255,255])
     mask1 = cv2.inRange(hsv, hsv_min, hsv_max)
 
     return mask1
@@ -78,7 +78,9 @@ def detect_sign(threshold, cap):
 
     assert cap.isOpened(), "カメラを認識していません！"
 
-    ret, frame = cap.read()
+    ret, f = cap.read()
+    frame = cv2.rotate(f, cv2.ROTATE_180)
+        # 赤色検出
 
     mask_red = red_detect(frame)
     mask_green = green_detect(frame)
@@ -98,7 +100,9 @@ def detect_sign(threshold, cap):
         is_red = True
     elif area_green > threshold:
         is_green = True
-
+    cv2.imshow("Frame", frame)
+    cv2.imshow("Mask red", mask_red)
+    cv2.imshow("Mask green", mask_green)
     return is_red, is_green
 
 def main():
@@ -106,8 +110,8 @@ def main():
     cap = cv2.VideoCapture(0)
 
     while(cap.isOpened()):
-        ret, frame = cap.read()
-
+        _, f = cap.read()
+        frame = cv2.rotate(f, cv2.ROTATE_180)
         # 赤色検出
         mask_red = red_detect(frame)
         #緑色検出
@@ -117,7 +121,7 @@ def main():
         max_blob_red = analysis_blob(mask_red)
         max_blob_green = analysis_blob(mask_green)
 
-        is_red, is_green = detect_sign(frame)
+        # is_red, is_green = detect_sign(frame)
 
         # 結果表示
         cv2.imshow("Frame", frame)
@@ -131,6 +135,7 @@ def main():
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    cap = cv2.VideoCapture(0)
-    while True:
-        detect_sign(20000, cap)
+    #cap = cv2.VideoCapture(0)
+    main()
+    #while True:
+    #    detect_sign(20000, cap)

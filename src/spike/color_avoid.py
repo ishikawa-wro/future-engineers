@@ -9,16 +9,15 @@ time.sleep(1)
 print("--device init--")
 while True:
     # motor init
-    l_motor = hub.port.F.motor
+    motor = hub.port.C.motor
     motor_steer = hub.port.E.motor
+    force_sensor = hub.port.F.device
 
     ser = hub.port.D
 
-    if ser == None or l_motor == None or motor_steer == None:
+    if ser == None or motor == None or motor_steer == None or force_sensor == None:
         continue
     ser.mode(hub.port.MODE_FULL_DUPLEX)
-    motor_pair = l_motor.pair(hub.port.B.motor)
-    print(motor_pair)
     time.sleep(2)
     ser.baud(115200)
     time.sleep(1)
@@ -27,16 +26,16 @@ while True:
 def move(throttle, steer):
     # steerが0のとき、直進する
     if steer == 0:
-        motor_pair.run_at_speed(-throttle, throttle)
-        motor_steer.run_to_position(steer)
+        motor.run_at_speed(-throttle)
+        motor_steer.run_to_position(steer,speed=10)
     # steerが0でないとき、角度steerだけ曲がる
     else:
-        motor_pair.run_at_speed(-throttle, throttle)
-        motor_steer.run_to_position(steer)
+        motor.run_at_speed(-throttle)
+        motor_steer.run_to_position(steer,speed=10)
         return steer
 
 def stop():
-    motor_pair.brake()
+    motor.brake()
     motor_steer.brake()
 
 
@@ -53,6 +52,7 @@ if __name__ == "__main__":
     prev_steer = 0
     throttle = 0
     steer = 0
+    flag = False
 
     while True:
         cmd = ""
@@ -77,8 +77,17 @@ if __name__ == "__main__":
 
                 throttle = int(cmd_list[0].split(",")[0])
                 steer = int(cmd_list[0].split(",")[1])
-                print(steer)
-                break
+            if flag:
+                stop()
+            time.sleep(10/1000)
+            if force_sensor.get(0)[0] >= 50:
+                flag = True
+            time.sleep(10/1000)
+            if flag and force_sensor.get(0)[0] >= 50:
+                flag = False
+            break
+
+        move(throttle, steer)
 
         #"end"を受け取ったとき、停止して終了する
         if end_flag:

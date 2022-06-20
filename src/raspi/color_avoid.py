@@ -5,8 +5,8 @@ import color_tracking
 import cv2
 
 ser = serial.Serial('/dev/ttyAMA1', 115200)
-throttle = 70
-
+throttle =  20
+s
 def avoid_object(detect_red, detect_green):
     if detect_red:
         steer = 20
@@ -22,7 +22,6 @@ steer = 0
 cap = cv2.VideoCapture(0)
 
 while True:
-
     #面積がthreshold以上の物体（赤、緑）を検出したとき、面積が大きい方の物体をdetect_~をTrueにする
     detect_red, detect_green = color_tracking.detect_sign(threshold, cap)
     throttle, steer = avoid_object(detect_red, detect_green)
@@ -33,7 +32,7 @@ while True:
 
     #運転の終了
     #if (終了条件):
-        break
+    #break
 
 ser.write("end@".encode())
 
