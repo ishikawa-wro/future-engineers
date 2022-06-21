@@ -86,6 +86,8 @@ if __name__ == "__main__":
             print("Distance: {}[cm]".format(distance))
             if distance:
                 ser.write("{:3d}@".format(distance))
+            else:
+                ser.write("{:3d}@".format(0))
 
             if flag:
                 stop()

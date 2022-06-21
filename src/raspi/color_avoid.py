@@ -31,6 +31,7 @@ while True:
     values = ser.read(8).decode("utf-8")
     value_list = values.split("@")
 
+    #When dist_sensor return None, distance is set to 0.
     distance = int(value_list[0])
     print("Distance: {}[cm]".format(distance))
 
