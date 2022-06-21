@@ -5,8 +5,8 @@ import color_tracking
 import cv2
 
 ser = serial.Serial('/dev/ttyAMA1', 115200)
-throttle =  20
-s
+throttle = 0
+
 def avoid_object(detect_red, detect_green):
     if detect_red:
         steer = 20
@@ -20,12 +20,25 @@ print("--waiting SPIKE--")
 threshold = 15000#回避動作を開始する画像中の物体の面積
 steer = 0
 cap = cv2.VideoCapture(0)
+values = ""
+
+ser.reset_input_buffer()
 
 while True:
+
+    #receive sensor values(distance)
+    ser.reset_input_buffer()
+    values = ser.read(8).decode("utf-8")
+    value_list = values.split("@")
+
+    distance = int(value_list[0])
+    print("Distance: {}[cm]".format(distance))
+
     #面積がthreshold以上の物体（赤、緑）を検出したとき、面積が大きい方の物体をdetect_~をTrueにする
     detect_red, detect_green = color_tracking.detect_sign(threshold, cap)
     throttle, steer = avoid_object(detect_red, detect_green)
 
+    #send operations(throttle, steer)
     cmd = "{:3d},{:3d}@".format(throttle, steer)
     print("write: {}".format(cmd))
     ser.write(cmd.encode("utf-8"))
