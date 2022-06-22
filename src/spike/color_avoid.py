@@ -13,11 +13,14 @@ while True:
     force_sensor = hub.port.F.device
     dist_sensor = hub.port.B.device
 
+
+
     ser = hub.port.D
 
     if ser==None or motor == None or motor_steer == None or force_sensor == None or dist_sensor== None:
         continue
     ser.mode(hub.port.MODE_FULL_DUPLEX)
+    motor_steer.mode(2)
     dist_sensor.mode(0)
     time.sleep(2)
     ser.baud(115200)
@@ -25,15 +28,22 @@ while True:
     break
 
 def move(throttle, steer):
-    # steerが0のとき、直進する
-    if steer == 0:
-        motor.run_at_speed(-throttle)
-        motor_steer.run_to_position(steer,speed=10)
-    # steerが0でないとき、角度steerだけ曲がる
-    else:
-        motor.run_at_speed(-throttle)
-        motor_steer.run_to_position(steer,speed=10)
-        return steer
+    while True:
+        if steer >= 0:
+            if motor_steer.get(2)[0] < steer:
+                print(motor_steer.get(2)[0],steer)
+                time.sleep(0.1)
+                motor.run_at_speed(-throttle)
+                motor_steer.run_at_speed(50)
+            else:
+                break
+        elif steer < 0:
+            if motor_steer.get(2)[0] > steer:
+                time.sleep(0.1)
+                motor.run_at_speed(-throttle)
+                motor_steer.run_at_speed(-50)
+            else:
+                break
 
 def stop():
     motor.brake()
@@ -79,28 +89,20 @@ if __name__ == "__main__":
 
                 throttle = int(cmd_list[0].split(",")[0])
                 steer = int(cmd_list[0].split(",")[1])
+                #print("Steer: {}".format(steer))
+
 
             #send distance
             distance = dist_sensor.get(2)[0]
-            time.sleep(10/1000)
-            print("Distance: {}[cm]".format(distance))
+            time.sleep(1/1000)
+            #print("Distance: {}[cm]".format(distance))
             if distance:
                 ser.write("{:3d}@".format(distance))
             else:
                 ser.write("{:3d}@".format(0))
 
-            if flag:
-                stop()
-            time.sleep(1/1000)
-            if force_sensor.get(0)[0] >= 50:
-                flag = True
-            time.sleep(1/1000)
-            if flag and force_sensor.get(0)[0] >= 50:
-                flag = False
             break
-
         move(throttle, steer)
-
         #"end"を受け取ったとき、停止して終了する
         if end_flag:
             stop()
