@@ -91,10 +91,10 @@ if __name__ == "__main__":
 
             if flag:
                 stop()
-            time.sleep(10/1000)
+            time.sleep(1/1000)
             if force_sensor.get(0)[0] >= 50:
                 flag = True
-            time.sleep(10/1000)
+            time.sleep(1/1000)
             if flag and force_sensor.get(0)[0] >= 50:
                 flag = False
             break
