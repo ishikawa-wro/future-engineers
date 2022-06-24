@@ -7,17 +7,18 @@ time.sleep(1)
 
 print("--device init--")
 while True:
-    # motor init
+    #motor init
     motor = hub.port.C.motor
     motor_steer = hub.port.E.motor
-    force_sensor = hub.port.F.device
+    #force_sensor = hub.port.F.device
     dist_sensor = hub.port.B.device
+
 
 
 
     ser = hub.port.D
 
-    if ser==None or motor == None or motor_steer == None or force_sensor == None or dist_sensor== None:
+    if ser==None or motor == None or motor_steer == None  or dist_sensor== None:
         continue
     ser.mode(hub.port.MODE_FULL_DUPLEX)
     motor_steer.mode(2)
@@ -95,7 +96,8 @@ if __name__ == "__main__":
             #send distance
             distance = dist_sensor.get(2)[0]
             time.sleep(1/1000)
-            #print("Distance: {}[cm]".format(distance))
+            print("Distance: {}[cm]".format(distance))
+            time.sleep(0.1)
             if distance:
                 ser.write("{:3d}@".format(distance))
             else:

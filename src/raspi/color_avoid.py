@@ -7,6 +7,8 @@ import cv2
 ser = serial.Serial('/dev/ttyAMA1', 115200)
 throttle = 10
 
+time.sleep(1)
+
 def avoid_object(detect_red, detect_green):
     if detect_red:
         steer = 20
@@ -38,7 +40,11 @@ while True:
     value_list = values.split("@")
 
     #When dist_sensor return None, distance is set to 0.
-    distance = int(value_list[0])
+    #print(value_list[0])
+    #print(int(value_list[0]))
+
+    #time.sleep(0.1)
+    distance = 10#int(value_list[0])
     #print("Distance: {}[cm]".format(distance))
 
     #面積がthreshold以上の物体（赤、緑）を検出したとき、面積が大きい方の物体をdetect_~をTrueにする
