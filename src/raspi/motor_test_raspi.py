@@ -1,3 +1,4 @@
+# ここにコードを書いてね :-)
 # カラー検出及び制御量の算出と制御
 import serial
 import time
@@ -9,25 +10,6 @@ throttle = 20
 
 time.sleep(1)
 
-def avoid_object(detect_red, detect_green):
-    if detect_red:
-        steer = 20
-    elif detect_green:
-        steer = -20
-    else:
-        steer = 0
-
-    return throttle, steer
-
-def distance_controll(distance):
-    steer=int((distance/2)-10)
-    if steer>10:
-        steer=10
-        #print(steer)
-        #time.sleep(1)
-    return throttle, steer
-
-
 print("--waiting SPIKE--")
 threshold = 15000#回避動作を開始する画像中の物体の面積
 steer = 0
@@ -37,8 +19,6 @@ values = ""
 ser.reset_input_buffer()
 
 while True:
-
-    #receive sensor values(distance)
     ser.reset_input_buffer()
     values = ser.read(8).decode("utf-8")
     value_list = values.split("@")
@@ -66,4 +46,5 @@ while True:
     #break
 
 ser.write("end@".encode())
+
 

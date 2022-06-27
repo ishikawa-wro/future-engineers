@@ -1,61 +1,59 @@
-# ここにコードを書いてね :-)
+# created by UNO
 import hub
 import time
 import re
 
-time.sleep(1)
+hub.motion.preset_yaw(0)
 
 print("--device init--")
 while True:
-    #motor init
     motor = hub.port.C.motor
     motor_steer = hub.port.E.motor
-    #force_sensor = hub.port.F.device
-    dist_sensor = hub.port.B.device
-
-
-
 
     ser = hub.port.D
 
-    if ser==None or motor == None or motor_steer == None  or dist_sensor== None:
+    if ser==None or motor == None or motor_steer == None:
         continue
+    motor.mode(2)
     ser.mode(hub.port.MODE_FULL_DUPLEX)
     motor_steer.mode(2)
-    dist_sensor.mode(0)
     time.sleep(2)
     ser.baud(115200)
     time.sleep(1)
     break
-
+"""
 def move(throttle, steer):
-    while True:
-        if steer >= 0:
-            if motor_steer.get(2)[0] < steer:
-                #print(motor_steer.get(2)[0],steer)
-                #time.sleep(0.1)
-                motor.run_at_speed(-throttle)
-                motor_steer.run_at_speed(30)
-            else:
-                break
-        elif steer < 0:
-            if motor_steer.get(2)[0] > steer:
-                #time.sleep(0.1)
-                motor.run_at_speed(-throttle)
-                motor_steer.run_at_speed(-30)
-            else:
-                break
-
-
+    motor.run_to_position(1,1)
+"""
 def stop():
     motor.brake()
     motor_steer.brake()
 
+motor_steer.preset(0)# steer_motor run_to_position value reset
 
+motor.run_for_degrees(720, 20)
+while(motor_steer.get(2)[0] < 20):
+    motor_steer.run_at_speed(10)
+
+motor.run_for_degrees(720, 20)
+
+while(motor_steer.get(2)[0] > -20):
+    motor_steer.run_at_speed(-20)
+
+motor.run_for_degrees(720,20)
+
+while(motor_steer.get(2)[0] < 0):
+    motor_steer.run_at_speed(20)
+
+motor.brake()
+motor_steer.brake()
+print("ok2")
+
+"""
 if __name__ == "__main__":
     #シリアルポートに残っているデータを空にする
     motor_steer.run_to_position(0,10)
-    time.sleep(10)
+    time.sleep(3)
     while True:
         reply = ser.read(10000)
         print(reply)
@@ -96,19 +94,10 @@ if __name__ == "__main__":
                 #print("Steer: {}".format(steer))
 
 
-            #send distance
-            distance = dist_sensor.get(2)[0]
-            time.sleep(1/1000)
-            #print("Distance: {}[cm]".format(distance))
-            #time.sleep(1)
-            if distance:
-                ser.write("{:3d}@".format(distance))
-            else:
-                ser.write("{:3d}@".format(0))
-
             break
         move(throttle, steer)
         #"end"を受け取ったとき、停止して終了する
         if end_flag:
             stop()
             break
+"""
