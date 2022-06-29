@@ -10,7 +10,6 @@ while True:
     #motor init
     motor = hub.port.C.motor
     motor_steer = hub.port.E.motor
-    #force_sensor = hub.port.F.device
     dist_sensor = hub.port.B.device
 
 

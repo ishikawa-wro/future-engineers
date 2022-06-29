@@ -22,13 +22,16 @@ while True:
     ser.reset_input_buffer()
     values = ser.read(8).decode("utf-8")
     value_list = values.split("@")
+    values = value_list[0].split(",")
 
     #When dist_sensor return None, distance is set to 0.
-    print(value_list[0])
+    print(values)
     #print(int(value_list[0]))
 
     time.sleep(0.1)
-    distance = int(value_list[0])
+    distance = int(values[0])
+    gyro_yaw = int(values[1])
+
     #print("Distance: {}[cm]".format(distance))
 
     #面積がthreshold以上の物体（赤、緑）を検出したとき、面積が大きい方の物体をdetect_~をTrueにする
