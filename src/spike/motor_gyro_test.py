@@ -32,7 +32,7 @@ def stop():
 thr = 3 #When stop return action
 motor_steer.preset(0)# steer_motor run_to_position value reset
 
-motor.run_at_speed(30)
+motor.run_at_speed(10)
 
 motor_steer.run_to_position(180, 100, 100)
 
@@ -44,22 +44,39 @@ motor_steer.run_to_position(0, 100)
 print(hub.motion.position()[0])
 
 while True:
-    difference_steer = int(-4*hub.motion.position()[0]) #steer's value difinition by hub.motion.position
+    difference_steer = int(-3*hub.motion.position()[0]) #steer's value difinition by hub.motion.position
     if (difference_steer < -100):
         difference_steer = -100
     elif (difference_steer > 100):
         difference_steer = 100
 
+    check = 0
+    steer_speed = abs(difference_steer)
+    if (steer_speed > 40):
+        steer_speed = 40
+    if (steer_speed < 8):
+        steer_speed = 8
+
     while(motor_steer.get(2)[0] <= difference_steer):
-        motor_steer.run_at_speed(30)
+        motor_steer.run_at_speed(steer_speed)
+        check = 1
 
     while(motor_steer.get(2)[0] > difference_steer):
-        motor_steer.run_at_speed(-30)
+        motor_steer.run_at_speed(-steer_speed)
+        check = 1
+
+    if (check == 1):
+        print(motor_steer.get(2)[0] , difference_steer)
+        check = 0
+
+    if (motor_steer.get(2)[0] == 0) and (difference_steer == 0):
+        motor_steer.run_to_position(0,speed = 5)
+        motor_steer.brake
 
     #print("in_yaw: {}".format(hub.motion.position()[0]))
 print("end")
 
-motor_steer.run_to_position(0, 100, 100)
+#motor_steer.run_to_position(0, 100, 100)
 print("post_yaw: {}".format(hub.motion.position()[0]))
 
 
