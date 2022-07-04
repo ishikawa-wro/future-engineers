@@ -9,14 +9,17 @@ while True:
     motor = hub.port.C.motor
     motor_steer = hub.port.E.motor
     distance_sensor = hub.port.B.device
+    light_sensor = hub.port.A.device
+    port_a = hub.port.A
 
     ser = hub.port.D
 
-    if ser==None or motor == None or motor_steer == None or distance_sensor == None:
+    if ser == None or motor == None or motor_steer == None or distance_sensor == None or light_sensor == None:
         continue
     motor.mode(2)
     ser.mode(hub.port.MODE_FULL_DUPLEX)
     motor_steer.mode(2)
+    light_sensor.mode(5)
     time.sleep(2)
     ser.baud(115200)
     time.sleep(1)
@@ -43,42 +46,62 @@ while motor.get(2)[0]<360:
 motor_steer.run_to_position(0, 100)
 print(hub.motion.position()[0])
 
-while True:
-    difference_steer = int(-3*hub.motion.position()[0]) #steer's value difinition by hub.motion.position
-    if (difference_steer < -100):
-        difference_steer = -100
-    elif (difference_steer > 100):
-        difference_steer = 100
+def straightening():
+    while True:
+        difference_steer = int(-3*hub.motion.position()[0]) #steer's value difinition by hub.motion.position
+        if (difference_steer < -100):
+            difference_steer = -100
+        elif (difference_steer > 100):
+            difference_steer = 100
 
-    check = 0
-    steer_speed = abs(difference_steer)
-    if (steer_speed > 40):
-        steer_speed = 40
-    if (steer_speed < 8):
-        steer_speed = 8
-
-    while(motor_steer.get(2)[0] <= difference_steer):
-        motor_steer.run_at_speed(steer_speed)
-        check = 1
-
-    while(motor_steer.get(2)[0] > difference_steer):
-        motor_steer.run_at_speed(-steer_speed)
-        check = 1
-
-    if (check == 1):
-        print(motor_steer.get(2)[0] , difference_steer)
         check = 0
+        steer_speed = abs(difference_steer)
+        if (steer_speed > 40):
+            steer_speed = 40
+        if (steer_speed < 8):
+            steer_speed = 8
 
-    if (motor_steer.get(2)[0] == 0) and (difference_steer == 0):
-        motor_steer.run_to_position(0,speed = 5)
-        motor_steer.brake
+        while(motor_steer.get(2)[0] <= difference_steer):
+            motor_steer.run_at_speed(steer_speed)
+            check = 1
+
+        while(motor_steer.get(2)[0] > difference_steer):
+            motor_steer.run_at_speed(-steer_speed)
+            check = 1
+
+        if (check == 1):
+            print(motor_steer.get(2)[0] , difference_steer)
+            check = 0
+
+        if (motor_steer.get(2)[0] == 0) and (difference_steer == 0):
+            motor_steer.run_to_position(0,speed = 5)
+            motor_steer.brake
+            break
+
+first = 1 #first flag
+gyro_preset = 0
+
+while True:
+
+    if(
+    (first ==1) or #start up first
+    (light_sensor.get(2)[0] > 100) and (light_sensor.get(2)[0] < 300) and
+    (light_sensor.get(2)[1] > 200) and (light_sensor.get(2)[1] < 400) and
+    (light_sensor.get(2)[2] > 400) and (light_sensor.get(2)[2] < 600) and
+    (light_sensor.get(2)[3] > 500) and (light_sensor.get(2)[3] < 700)  ):  #if find blue(gabagaba)
+        if(first != 1):
+            gyro_preset = 1
+        if(gyro_preset):
+            hub.motion.preset_yaw(90)
+            gyro_preset = 0
+        straightening()
+        first = 0
 
     #print("in_yaw: {}".format(hub.motion.position()[0]))
 print("end")
 
 #motor_steer.run_to_position(0, 100, 100)
 print("post_yaw: {}".format(hub.motion.position()[0]))
-
 
 '''
 motor.run_for_degrees(720, 20)
