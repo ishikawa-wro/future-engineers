@@ -42,7 +42,4 @@ while True:
     (light_sensor.get(2)[1] > 200) and (light_sensor.get(2)[1] < 400) and
     (light_sensor.get(2)[2] > 400) and (light_sensor.get(2)[2] < 600) and
     (light_sensor.get(2)[3] > 500) and (light_sensor.get(2)[3] < 700) ):
-        print("aoi")
-
-
-
+        print("blue")

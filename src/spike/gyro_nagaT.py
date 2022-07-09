@@ -80,7 +80,18 @@ def straightening():
         """
 
         #if (motor_steer.get(2)[0] == 0) and (difference_steer == 0):
+        """
         if (motor_steer.get(2)[0] == 0):
+            motor_steer.run_to_position(0)
+            motor_steer.brake
+            break
+        """
+        if(
+        (first ==1) or #start up first
+        (light_sensor.get(2)[0] > 0) and (light_sensor.get(2)[0] < 400) and
+        (light_sensor.get(2)[1] > 100) and (light_sensor.get(2)[1] < 500) and
+        (light_sensor.get(2)[2] > 300) and (light_sensor.get(2)[2] < 700) and
+        (light_sensor.get(2)[3] > 400) and (light_sensor.get(2)[3] < 800)  ):
             motor_steer.run_to_position(0)
             motor_steer.brake
             break
@@ -128,3 +139,4 @@ while(motor_steer.get(2)[0] < 0):
 motor.brake()
 motor_steer.brake()
 '''
+# ここにコードを書いてね :-)
