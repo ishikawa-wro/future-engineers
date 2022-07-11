@@ -3,18 +3,18 @@ import time
 import re
 
 hub.motion.yaw_pitch_roll(0)
-
 print("--device init--")
+yyy
 while True:
     motor = hub.port.C.motor
     motor_steer = hub.port.E.motor
-    distance_sensor = hub.port.B.device
+    #distance_sensor = hub.port.B.device
     light_sensor = hub.port.A.device
     port_a = hub.port.A
 
     ser = hub.port.D
 
-    if ser == None or motor == None or motor_steer == None or distance_sensor == None or light_sensor == None:
+    if ser == None or motor == None or motor_steer == None or light_sensor == None:
         continue
     motor.mode(2)
     ser.mode(hub.port.MODE_FULL_DUPLEX)
@@ -35,7 +35,7 @@ def stop():
 thr = 3 #When stop return action
 motor_steer.preset(0)# steer_motor run_to_position value reset
 
-motor.run_at_speed(50)
+motor.run_at_speed(20)
 
 motor_steer.run_to_position(110, 100, 100)
 
@@ -86,8 +86,8 @@ def straightening():
             motor_steer.brake
             break
         """
+
         if(
-        (first ==1) or #start up first
         (light_sensor.get(2)[0] > 0) and (light_sensor.get(2)[0] < 400) and
         (light_sensor.get(2)[1] > 100) and (light_sensor.get(2)[1] < 500) and
         (light_sensor.get(2)[2] > 300) and (light_sensor.get(2)[2] < 700) and

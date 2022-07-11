@@ -8,13 +8,13 @@ print("--device init--")
 while True:
     motor = hub.port.C.motor
     motor_steer = hub.port.E.motor
-    distance_sensor = hub.port.B.device
+    #distance_sensor = hub.port.B.device
     light_sensor = hub.port.A.device
     port_a = hub.port.A
 
     ser = hub.port.D
 
-    if ser == None or motor == None or motor_steer == None or distance_sensor == None or light_sensor == None:
+    if ser == None or motor == None or motor_steer == None or light_sensor == None:
         continue
     motor.mode(2)
     ser.mode(hub.port.MODE_FULL_DUPLEX)
