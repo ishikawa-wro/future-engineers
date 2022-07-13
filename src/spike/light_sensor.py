@@ -18,7 +18,7 @@ while True:
         print(mode)
         print("\n")
     break
-    while True
+    while True:
         time.sleep(2)
         print(light_sensor.get(2))
 
