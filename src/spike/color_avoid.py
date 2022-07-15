@@ -7,21 +7,34 @@ time.sleep(1)
 
 print("--device init--")
 while True:
+<<<<<<< HEAD
     #motor init
     motor = hub.port.C.motor
+=======
+    # motor init
+    motor = hub.port.F.motor
+>>>>>>> 90b7e87882b73174b2e88ce1c3f540fbea9b3a3a
     motor_steer = hub.port.E.motor
     dist_sensor = hub.port.B.device
 
 
 
 
+
     ser = hub.port.D
 
+<<<<<<< HEAD
     if ser==None or motor == None or motor_steer == None  or dist_sensor== None:
         continue
     ser.mode(hub.port.MODE_FULL_DUPLEX)
     motor_steer.mode(2)
     dist_sensor.mode(0)
+=======
+    if ser==None or motor == None or motor_steer == None :
+        continue
+    ser.mode(hub.port.MODE_FULL_DUPLEX)
+    motor_steer.mode(2)
+>>>>>>> 90b7e87882b73174b2e88ce1c3f540fbea9b3a3a
     time.sleep(2)
     ser.baud(115200)
     time.sleep(1)
@@ -92,12 +105,22 @@ if __name__ == "__main__":
 
                 throttle = int(cmd_list[0].split(",")[0])
                 steer = int(cmd_list[0].split(",")[1])
+<<<<<<< HEAD
                 #print("Steer: {}".format(steer))
 
 
             #send distance
             distance = dist_sensor.get(2)[0]
             time.sleep(1/1000)
+=======
+                print(steer)
+                break
+            move(throttle, steer)
+
+
+            #send distance
+            time.sleep(100/1000)
+>>>>>>> 90b7e87882b73174b2e88ce1c3f540fbea9b3a3a
             #print("Distance: {}[cm]".format(distance))
             #time.sleep(1)
             if distance:
