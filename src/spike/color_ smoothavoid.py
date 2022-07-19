@@ -4,9 +4,8 @@ import time
 import re
 from avoid_color_sign import Avoid_color_sign
 from gyro import Gyro
-print("--device init--")
-
-
+print("--devce init--")
+uu
 while True:
     motor = hub.port.C.motor
     motor_steer = hub.port.E.motor
@@ -20,7 +19,7 @@ while True:
     motor.mode(2)
     ser.mode(hub.port.MODE_FULL_DUPLEX)
     motor_steer.mode(2)
-    light_sensor.mode(5)
+    light_sensor.mode(6)
     time.sleep(2)
     ser.baud(115200)
     time.sleep(1)
@@ -32,7 +31,7 @@ gyro = Gyro(motor_steer,motor,light_sensor)
 def resetSerialBuffer():
     while True:
         reply = ser.read(10000)
-        print(reply)
+        #print(reply)
         if reply == b"":
             break
 
@@ -107,16 +106,18 @@ if __name__ == "__main__":
 
         #gyro.change_steer()
 
-        print("red,green",red_flag,green_flag)
-        if red_flag:
-            avoid_color_sign.avoidRed()
+        #print("red,green",red_flag,green_flag)
+        """if red_flag:
+            #avoid_color_sign.avoidRed()
             avoid_color_sign.setBias(20)
         elif green_flag:
-            avoid_color_sign.avoidGreen()
-            avoid_color_sign.setBias(-20)
-        else:
-            print("bias",avoid_color_sign.bias)
+            #avoid_color_sign.avoidGreen()
+            avoid_color_sign.setBias(-20)"""
+        if True:
+            #print("bias",avoid_color_sign.bias)
             gyro.straightening(20,0)
+            gyro.change_steer()
+
             #gyro.straightening(20,avoid_color_sign.bias)
 
 

@@ -31,7 +31,7 @@ def green_detect(img):
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
     # 緑色のHSVの値域
-    hsv_min = np.array([30,64,0])
+    hsv_min = np.array([30,64,20])
     hsv_max = np.array([90,255,255])
     mask1 = cv2.inRange(hsv, hsv_min, hsv_max)
 
