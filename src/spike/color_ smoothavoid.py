@@ -5,7 +5,7 @@ import re
 from avoid_color_sign import Avoid_color_sign
 from gyro import Gyro
 print("--devce init--")
-uu
+
 while True:
     motor = hub.port.C.motor
     motor_steer = hub.port.E.motor
